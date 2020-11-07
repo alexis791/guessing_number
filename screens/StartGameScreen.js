@@ -1,32 +1,73 @@
-import React from 'react'
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, Button, TouchableWithoutFeedback, Keyboard } from 'react-native'
 
 import Card from '../components/Card'
 import Input from '../components/Input'
 import Colors from '../constants/colors'
 
 const StartGameScreen = props => {
+
+  const [enteredValue, setEnteredValue] = useState('')
+  const [confirmed, setConfirmed] = useState(false)
+  const [selectedNumber, setSelectedNumber] = useState()
+
+  const numberInputHandler = inputText => {
+    setEnteredValue(inputText.replace(/[^0-9]/g,''))
+  }
+
+  const resetInputHandler = () => {
+    setEnteredValue('')
+    setConfirmed(false)
+  }
+
+  const confirmInputHandler = () => {
+    let chosenNumber = parseInt(enteredValue)
+
+    if(isNaN(chosenNumber) || chosenNumber < 1 || chosenNumber > 99) {
+      return
+    }
+
+    setConfirmed(true)
+    setEnteredValue('')
+    setSelectedNumber(chosenNumber)
+  }
+
+  let confirmedOutput
+
+  if(confirmed) {
+    confirmedOutput = <Text>Chosen Number: {selectedNumber}</Text>
+  }
+
+
+
   return (
-    <View style={styles.screen}>
-      <Text style={styles.title}>Start a New Game!</Text>
-      <Card style={styles.inputContainer}>
-        <Text>Select a Number</Text>
-        <Input style={styles.input}
-          blurOnSubmit autoCapitalize='none'
-          autoCorrect={false}
-          keyboardType='phone-pad'
-          maxLength={2} 
-        />
-        <View style={styles.buttonContainer}>
-          <View style={styles.button}>
-            <Button title="Reset" onPress={() => {}} color={Colors.secondary}/>
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss()
+    }}>
+      <View style={styles.screen}>
+        <Text style={styles.title}>Start a New Game!</Text>
+        <Card style={styles.inputContainer}>
+          <Text>Select a Number</Text>
+          <Input style={styles.input}
+            blurOnSubmit autoCapitalize='none'
+            autoCorrect={false}
+            keyboardType='phone-pad'
+            maxLength={2}
+            onChangeText={numberInputHandler}
+            value={enteredValue}
+          />
+          <View style={styles.buttonContainer}>
+            <View style={styles.button}>
+              <Button title="Reset" onPress={resetInputHandler} color={Colors.secondary}/>
+            </View>
+            <View style={styles.button}>
+              <Button title="Confirm" onPress={confirmInputHandler} color={Colors.primary} />
+            </View>
           </View>
-          <View style={styles.button}>
-            <Button title="Confirm" onPress={() => {}} color={Colors.primary} />
-          </View>
-        </View>
-      </Card>
-    </View>
+        </Card>
+        {confirmedOutput}
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
