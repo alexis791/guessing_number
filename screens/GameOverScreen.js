@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, StyleSheet, Button, Image, Text } from 'react-native'
+import { View, StyleSheet, Image, Text } from 'react-native'
 import Colors from '../constants/colors'
 
 import BodyText from '../components/BodyText'
 import TitleText from '../components/TitleText'
+import MainButton from '../components/MainButton'
 
 const GaveOverScreen = props => {
   return (
@@ -24,7 +25,7 @@ const GaveOverScreen = props => {
           <Text style={styles.highligth}>{props.userNumber}</Text>
         </BodyText>
       </View>
-      <Button title="NEW GAME" onPress={props.onRestart}/>
+      <MainButton onPress={props.onRestart}>NEW GAME</MainButton>
     </View>
   )
 }
